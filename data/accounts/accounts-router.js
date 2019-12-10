@@ -39,9 +39,7 @@ router.put('/:id', (req, res ) => {
     const id = req.params.id;
     const edit = req.body;
     if (edit.name || edit.budget) {
-        db('accounts')
-         .where({id})
-         .update(edit)
+        db.update(edit).from('accounts').where({id: id})
          .then(count => {
              if(count > 0){
                  res.status(200).json({message: `${count} account(s) updated`})
@@ -81,8 +79,7 @@ router.delete('/:id', (req, res)=> {
 router.post('/', (req, res ) => {
     const accountData = req.body
     if (accountData.name && accountData.budget){
-        db("accounts")
-        .insert(accountData, "id")
+        db.insert(accountData, "id").into('accounts')
         .then(e => {
             const id = e[0];
             db("accounts")
@@ -101,6 +98,7 @@ router.post('/', (req, res ) => {
     }
 })
 
+// don't fully understand post, ask during 1on1.
 
 module.exports = router;
 
