@@ -49,7 +49,7 @@ router.put('/:id', (req, res ) => {
                  res.status(404).json({message: "account not found"})
              }
          })
-         .catch(error => {
+         .catch(error => { 
              console.log(error)
              res.status(500).json({errorMessage:"Error editing the account "})
          })
@@ -58,29 +58,6 @@ router.put('/:id', (req, res ) => {
     }
 })
 
-// post 
-router.post('/', (req, res ) => {
-    const accountData = req.body
-    if (accountData.name && accountData.budget){
-        db("accounts")
-        .insert(accountData, "id")
-        .then(e => {
-            const id = e[0];
-            return db("accounts")
-            .where({id})
-            .first()
-            .then(account => {
-                res.status(201).json(account)
-            })
-        })
-        .catch(error => {
-            console.log(error);
-            res.status(500).json({errorMessage: "Error adding the account "})
-        })
-    } else {
-        res.status(400).json({message: "Please add both a name and a budget"})
-    }
-})
 
 // delete 
 router.delete('/:id', (req, res)=> {
@@ -100,7 +77,30 @@ router.delete('/:id', (req, res)=> {
     
 })
 
-
+// post 
+router.post('/', (req, res ) => {
+    const accountData = req.body
+    if (accountData.name && accountData.budget){
+        db("accounts")
+        .insert(accountData, "id")
+        .then(e => {
+            const id = e[0];
+            db("accounts")
+                .where({id})
+                .first()
+                .then(account => {
+                    res.status(201).json(account)
+                })
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({errorMessage: "Error adding the account "})
+        })
+    } else {
+        res.status(400).json({message: "Please add both a name and a budget"})
+    }
+})
 
 
 module.exports = router;
+
